@@ -1,27 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sfs2X.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class CahngeScene : MonoBehaviour
 {
+    [SerializeField]GameObject loginPanel;
     private int sceneCounter;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            LoadScene();
+            if(SceneManager.GetActiveScene().name == "Level 1"){
+                loginPanel.SetActive(true);
+            }
+            else{
+                GameObject.Find("Game").GetComponent<GameManager>().Disconnect();
+                LoadScene();
+            }
         }
     }
     public void LoadScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         SceneManager.LoadScene(currentSceneIndex % 2);
-        if (currentSceneIndex % 2 == 1)
+        if (currentSceneIndex % 2 == 1){
             StartCoroutine(GetRequest());
 
+        }
     }
 
     IEnumerator GetRequest(string uri = @"https://api.countapi.xyz/hit/ThirdPersonShooter/key")
